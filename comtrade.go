@@ -61,6 +61,10 @@ type SampleDetail struct {
 func (cfg *CFG) UnmarshalCfg(content []byte) (err error) {
 	index := 0
 	line := strings.Split(string(content), "\n")
+
+	if len(line[0])>0&&line[0][len(line[0])-1]=='\r'{
+		line = strings.Split(string(content), "\r\n")
+	}
 	if len(line) < 9 {
 		return errors.New("invalid cfg file")
 	}
