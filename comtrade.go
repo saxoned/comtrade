@@ -39,7 +39,7 @@ type AnalogChannel struct {
 	Unit      string  //通道单位
 	A         float64 //通道乘数
 	B         float64 //通道偏移加数
-	Skew      uint8   //通道时滞
+	Skew      float64 //通道时滞
 	Min       int     //最小值
 	Max       int     //最大值
 	Primary   float64 //通道电压或电流变换比一次系数
@@ -143,11 +143,11 @@ func (cfg *CFG) UnmarshalCfg(content []byte) (err error) {
 			return checkError("value b", index)
 		}
 		analogChannelDetail[i].B = b
-		skew, err := strconv.ParseUint(tempList[7], 10, 32)
+		skew, err := strconv.ParseFloat(tempList[7], 32)
 		if err != nil {
 			return checkError("skew", index)
 		}
-		analogChannelDetail[i].Skew = uint8(skew)
+		analogChannelDetail[i].Skew = skew
 		min, err := strconv.ParseInt(tempList[8], 10, 32)
 		if err != nil {
 			return checkError("min", index)
