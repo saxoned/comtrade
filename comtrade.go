@@ -37,13 +37,13 @@ type AnalogChannel struct {
 	Phase     string  //相位特征
 	Element   string  //被监视的回路元件
 	Unit      string  //通道单位
-	A         float32 //通道乘数
-	B         float32 //通道偏移加数
+	A         float64 //通道乘数
+	B         float64 //通道偏移加数
 	Skew      uint8   //通道时滞
 	Min       int     //最小值
 	Max       int     //最大值
-	Primary   int     //通道电压或电流变换比一次系数
-	Secondary int     //通道电压或电流变换比二次系数
+	Primary   float64 //通道电压或电流变换比一次系数
+	Secondary float64 //通道电压或电流变换比二次系数
 	PS        string  //一次(P),二次(S)
 }
 
@@ -62,7 +62,7 @@ func (cfg *CFG) UnmarshalCfg(content []byte) (err error) {
 	index := 0
 	line := strings.Split(string(content), "\n")
 
-	if len(line[0])>0&&line[0][len(line[0])-1]=='\r'{
+	if len(line[0]) > 0 && line[0][len(line[0])-1] == '\r' {
 		line = strings.Split(string(content), "\r\n")
 	}
 	if len(line) < 9 {
@@ -137,12 +137,12 @@ func (cfg *CFG) UnmarshalCfg(content []byte) (err error) {
 		if err != nil {
 			return checkError("value a", index)
 		}
-		analogChannelDetail[i].A = float32(a)
+		analogChannelDetail[i].A = a
 		b, err := strconv.ParseFloat(tempList[6], 32)
 		if err != nil {
 			return checkError("value b", index)
 		}
-		analogChannelDetail[i].B = float32(b)
+		analogChannelDetail[i].B = b
 		skew, err := strconv.ParseUint(tempList[7], 10, 32)
 		if err != nil {
 			return checkError("skew", index)
@@ -158,16 +158,16 @@ func (cfg *CFG) UnmarshalCfg(content []byte) (err error) {
 			return checkError("max", index)
 		}
 		analogChannelDetail[i].Max = int(max)
-		primary, err := strconv.ParseInt(tempList[10], 10, 32)
+		primary, err := strconv.ParseFloat(tempList[10], 32)
 		if err != nil {
 			return checkError("primary", index)
 		}
-		analogChannelDetail[i].Primary = int(primary)
-		secondary, err := strconv.ParseInt(tempList[11], 10, 32)
+		analogChannelDetail[i].Primary = primary
+		secondary, err := strconv.ParseFloat(tempList[11], 32)
 		if err != nil {
 			return checkError("secondary", index)
 		}
-		analogChannelDetail[i].Secondary = int(secondary)
+		analogChannelDetail[i].Secondary = secondary
 		analogChannelDetail[i].PS = tempList[12]
 
 	}
@@ -275,7 +275,7 @@ func (cfg *CFG) UnmarshalDat(content []byte) (result [][]int, err error) {
 				return nil, err
 			}
 
-			r = append(r, int(float32(value[n])*cfg.AnalogChannelDetail[n].A+cfg.AnalogChannelDetail[n].B))
+			r = append(r, int(float64(value[n])*cfg.AnalogChannelDetail[n].A+cfg.AnalogChannelDetail[n].B))
 		}
 		result = append(result, r)
 	}
