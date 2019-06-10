@@ -255,7 +255,7 @@ func (cfg *CFG) UnmarshalDat(content []byte) (result [][]int, err error) {
 	for n := 0; n < int(cfg.ChannelNumber); n++ {
 		r := make([]int, 0)
 
-		for i := 0; i < int(cfg.SampleDetails[n].Number); i++ {
+		for i := 0; i < int(cfg.SampleDetails[0].Number); i++ {
 			s := content[i*nb : i*nb+nb]
 
 			/*var data struct {
